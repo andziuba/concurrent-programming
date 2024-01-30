@@ -119,6 +119,11 @@ void smoker(int smoker_id, int semid_price_change, int semid_agent, int semid_sm
                     msg.mvalue[0] = smoker_id;
                     msg.mvalue[1] = cost;
 
+                    // Subtract the cost of ingredient from the balance
+                    P(semid_balance, smoker_id);
+                    balances[smoker_id] -= cost;
+                    V(semid_balance, smoker_id);
+
                     // Send message to the seller (begin the transaction)
                     if (msgsnd(msgid, &msg, sizeof(msg.mvalue), 0) == -1) {
                         perror(ANSI_COLOR_GREEN "Sending message to seller" ANSI_COLOR_RESET);
